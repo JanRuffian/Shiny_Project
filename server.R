@@ -18,7 +18,7 @@ shinyServer(function(input, output) {
       
       #Introduction
       output$mean_wage <- renderInfoBox({
-        infoBox(title = "Mean Monthly Wage",
+        infoBox(title = "Average Monthly Wage",
                 subtitle = "CHF",
                 value = round(mean(wages_1$mbls),0),
                 fill=TRUE
@@ -45,16 +45,12 @@ shinyServer(function(input, output) {
         )
       })
       
-      output$text4 <- renderText(paste("Jan is an amazing guy. asdjifölaksjf  aklsjdfölajs /n 
-      aslfjasldfjsöakjfkl aksjdfö lkaj  asfkdj klja sf aksfa /n
-      asjföaslkdjf skdl fjlak jsldk jölka sdfjlkasjlkf /n
-                                       asfjdöa f alskdfj kla sjdf kaljsdf ljasl flökasj dfkl"))
 
       #Gender
 
       filter_wage_gender_position <- reactive ({
         
-        filterData_wage_gender_position <- wage_gender_position[wage_gender_position$industry==input$indSelector, ]
+        filterData_wage_gender_position <- wage_industry[wage_industry$industry==input$indSelector, ]
         
         return(filterData_wage_gender_position)
         
@@ -62,8 +58,8 @@ shinyServer(function(input, output) {
       
       output$mean_wage_female <- renderInfoBox({
         data=filter_wage_gender_position()
-        infoBox(title = "Mean Monthly Wage (based on selcted industry)",
-                subtitle = "Female",
+        infoBox(title = "Average Monthly Wage (by selected industry)",
+                subtitle = "CHF",
                 value = round(mean(data[data$Sex=="Female","mean_wage"]$mean_wage),0), 
                 fill=TRUE,
                 icon=icon("female")
@@ -72,8 +68,8 @@ shinyServer(function(input, output) {
       
       output$mean_wage_male <- renderInfoBox({
         data=filter_wage_gender_position()
-        infoBox(title = "Mean Monthly Wage (based on selcted industry)",
-                subtitle = "Male",
+        infoBox(title = "Average Monthly Wage (by selected industry)",
+                subtitle = "CHF",
                 value = round(mean(data[data$Sex=="Male","mean_wage"]$mean_wage),0),
                 fill=TRUE,
                 color="yellow",
@@ -100,12 +96,19 @@ shinyServer(function(input, output) {
           theme(legend.position="bottom")
       
       })
-      
+ 
+      filter_wage_gender_position <- reactive ({
+        
+        filterData_wage_gender_position <- wage_gender_position[wage_gender_position$industry==input$indSelector, ]
+        
+        return(filterData_wage_gender_position)
+        
+      })           
       output$wage_gender_position <- renderPlot({
         
       ggplot(filter_wage_gender_position(), aes(x= reorder(position, mean_wage), y=mean_wage))+ 
         geom_bar(aes(fill=Sex), position='dodge', stat = "identity")+
-        xlab("Position")+
+        xlab("Management Position")+
         ylab("Monthly Wage")+
         theme(legend.position="bottom")+
         coord_flip()  
@@ -150,9 +153,10 @@ shinyServer(function(input, output) {
       output$wage_experience_m_f <- renderPlot({   
         ggplot(filter_wage_experience(), aes(x=Year, y=mean_wage, color=Sex, size=number))+
           geom_point()+
-          ylim(0, 15000)+
-          ylab("Wage")+
-          xlab("Years")
+          ylim(0, 18000)+
+          xlim(20,75)+
+          ylab("Monthly Wage")+
+          xlab("Age or Experience")
       })      
        
       output$plot1 <- renderPlot({
@@ -161,20 +165,20 @@ shinyServer(function(input, output) {
       
       #Industry
 
-      filter_wageindustry <- reactive ({
+      filter_wageindustry_kpis <- reactive ({
         
-        filterData_wageindustry <- wage_industry[wage_industry$industry %in% input$indSelector2, ]
+        filterData_wageindustry_kpis <- wage_industry_kpis[wage_industry_kpis$industry %in% input$indSelector2, ]
         
-        return(filterData_wageindustry)
+        return(filterData_wageindustry_kpis)
         
       })           
 
       
       
       output$industry_max <- renderInfoBox({
-        data=filter_wageindustry()
+        data=filter_wageindustry_kpis()
         infoBox(title = data[data$WagesIndustry == max(data$WagesIndustry),"industry"],
-                subtitle = "Top industry: Monthly average wage",                
+                subtitle = "Top industry: Monthly average wage (CHF)",                
                 value = round(max(data$WagesIndustry), 0),
                 fill=TRUE,
                 color="green",
@@ -183,15 +187,24 @@ shinyServer(function(input, output) {
       })
       
       output$industry_min <- renderInfoBox({
-        data=filter_wageindustry()
+        data=filter_wageindustry_kpis()
         infoBox(title = data[data$WagesIndustry == min(data$WagesIndustry),"industry"],
-                subtitle = "Flop industry: Monthly average wage",
+                subtitle = "Flop industry: Monthly average wage (CHF)",
                 value = round(min(data$WagesIndustry), 0),
                 fill=TRUE,
                 color="red",
                 icon=icon("hand-o-down")
         )
       })
+      
+      
+      filter_wageindustry <- reactive ({
+        
+        filterData_wageindustry <- wage_industry[wage_industry$industry %in% input$indSelector2, ]
+        
+        return(filterData_wageindustry)
+        
+      })        
       
       output$wage_industry <- renderPlot({
       ggplot(filter_wageindustry(), aes(x= reorder(industry, WagesIndustry), y = WagesIndustry)) +
@@ -224,7 +237,7 @@ shinyServer(function(input, output) {
       output$canton_max <- renderInfoBox({
         data=filter_wagecanton()
         infoBox(title = data[data$values == max(data$values),"name"],
-                subtitle = "Top canton: Monthly average wage",                
+                subtitle = "Top canton: Monthly average wage (CHF)",                
                 value = round(max(data$values),0),
                 fill=TRUE,
                 color="green",
@@ -234,8 +247,8 @@ shinyServer(function(input, output) {
 
       output$canton_min <- renderInfoBox({
         data=filter_wagecanton()
-        infoBox(title = "Uri",
-                subtitle = "Flop canton: Monthly average wage",                
+        infoBox(title = data[data$values == min(data$values),"name"],
+                subtitle = "Flop canton: Monthly average wage (CHF)",                
                 value = round(min(data$values),0),
                 fill=TRUE,
                 color="red",
@@ -255,7 +268,7 @@ shinyServer(function(input, output) {
           geom_bar(stat = "identity", fill="#f05457")+
           coord_flip()+
           xlab("Canton")+
-          ylab("Montly Wage")    
+          ylab("Monthly Wage")    
         
       })  
       
@@ -267,11 +280,13 @@ shinyServer(function(input, output) {
         
       })
       
-      #Ouput Text
-      output$text1 <- renderText(paste("Jan is an amazing guy."))
+      output$github <- renderUI({
+        tagList("URL link:", urlGithub)
+      })
       
-      output$text2 <- renderText(paste("Jan is an amazing guy."))
+      output$linkedin <- renderUI({
+        tagList("URL link:", urlLinkedin)
+      })
       
-      output$text3 <- renderText(paste("Jan is an amazing guy."))
 
 })

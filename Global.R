@@ -5,7 +5,7 @@ library(dplyr)
 library(RSwissMaps)
 library(DT)
 
-wages <- read.dta("/Users/janruffner/Desktop/Shiny_Project/App_Wages/lse2010.dta")
+wages <- read.dta("/Users/janruffner/Desktop/Shiny_Project/lse2010.dta")
 wages_1 <- head(wages, 2000000)
 wages_1 <- wages_1[wages_1$taetigk!=-9, ]
 
@@ -187,6 +187,10 @@ wage_experience_age <- rbind(wage_experience,wage_age)
 
 wage_industry<- wages_1 %>% group_by(industry, Sex) %>% summarise(WagesIndustry=mean(mbls), weight=n())
 
+#industry dataset for kpis
+
+wage_industry_kpis <- wages_1 %>% group_by(industry) %>% summarise(WagesIndustry=mean(mbls), weight=n())
+
 # canton dataset
 
 dt <- can.template(2016)
@@ -197,11 +201,12 @@ wage_canton <- wages_1 %>% group_by(name, bfs_nr) %>% summarize(values=round(mea
 
 # data dataset
 wages_data <- wages_1 %>% rename(corporateID = "burnr_n", gender="Sex", 
-                              experience = "dienstja", wage="mbls",canton="arbkto",
+                              experience = "dienstja", age = "alter", wage="mbls",canton="arbkto",
                               dedication="taetigk2") %>% head(200) %>%
-                              select(canton, corporateID, industry, gender, experience,  
+                              select(canton, corporateID, industry, gender, experience, age, position, education,
                               dedication, wage)
 
+colnames(wages_data)
 
 # Create distribution dataset
 

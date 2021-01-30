@@ -33,36 +33,43 @@ shinyUI(dashboardPage(
                         box(
                         title = "Aim", status = "primary", solidHeader = TRUE,
                         collapsible = TRUE, width=6, "The application presents the wages in Switzerland
-                        in the year 2018. Furthermore the app gives insights about the main
+                        in the year 2018. Furthermore, the app gives insights about the main
                         determinants of the wages and wage distribution. Important factors
-                        are gender, experience, industry, job type, foreign status and location.
+                        are gender, experience, industry, management position and location.
+                        On the one hand it will help companies to set the right wages to be competitive. 
+                        On the other hand it will inform the state if there is discrimination for example 
+                        between gender and nationality. "
+                        ),img(src="Lohnbuch2018.png", height="40%", width="40%")      
+                      ),
                         
-                        I work with the wage structure survey. The LSE is a survey which is sent to a representative sample
-                        of enterprises every two years by the Swiss Federal Statistical Oce since 1994. Participation is mandatory. 
-                        The survey includes enterprises from all industries of the manufacturing sector and the service sector. 
-                        There is data on the establishment level such as the size and there is detailed information about individual 
-                        characteristics of every employee such as the residence status, the occupation, the education level and the wages.
-                        It captures therefore a large amount of information on the Swiss workforce. Excluded are just apprentices and trainees, 
-                        home workers, employees working exclusively on commission basis, workers who are mainly active abroad, proprietors of a firm, 
-                        workers with a reduced wage (e.g. due to invalidity), and workers employed in firms with less than 2 employees.  "
-                        ),
-                        img(src="Lohnbuch2018.png", height="40%", width="40%")      
-                              ),
                       fluidRow(
                         box(
                           title = "Findings", status = "primary", solidHeader = TRUE,
-                          collapsible = TRUE, width=6, "The app 
-                          1. 
-                          asdf asfdasdfasfdasfdasfdsadfasdfasdffdsadffd  sa dfas fsa aadfsa df
-                          <br/>
-                          <br/>
-                          a sdfasdf ass asdf as fs fas dfsadf asdf safsadf asfa ds aafs asdf sd faadfsf asf fsassd assfd sadf as
-                          <br/>
-                          <br/>
-                          a sdf asdf asfd sfa dasf asf sfda fsddsfaa"
+                          collapsible = TRUE, width=6, 
+                          "1. Gender: Males earn on average 23.6% more than females. Annualy this is a difference of around 20'400 CHF. When we account for industry
+                          or management position this difference gets smaller but a certain wage difference between gender remains.
+                          2. Age: The average salary increases till the year of 40. For top management position this effect holds longer till the age of 45.   
+                          3. Industry, average monthly wage: Finance: 11'126 CHF, Pharma: 10’467 CHF, Other personal service activities: 4'537 CHF
+                          4. Location: The highest paying canton Geneva pays 26% more in comparison to the lowest paying canton Tessin, which corresponds to 
+                          an annual difference of around 33'600 CHF"
                           )   
+                              ),
                       
-                              )
+                      fluidRow(
+                        box(
+                          title = "Data", status = "primary", solidHeader = TRUE,
+                          collapsible = TRUE, width=6, "
+                          The wage structure survey (LSE) is a survey which is sent to a representative sample
+                          of enterprises by the Swiss Federal Statistical Office in 2018. Participation is mandatory. 
+                          The survey includes enterprises from all industries of the manufacturing sector and the service sector. 
+                          There is data on the establishment level such as the size and there is detailed information about individual 
+                          characteristics of every employee such as the residence status, the occupation, the education level and the wage.
+                          It captures therefore a large amount of information on the Swiss workforce (sample of 1'900'000 workers). Excluded are just apprentices and trainees, 
+                          home workers, employees working exclusively on commission basis, workers who are mainly active abroad, proprietors of a firm, 
+                          workers with a reduced wage (e.g. due to invalidity), and workers employed in firms with less than 2 employees." 
+                        )   
+                      )
+                      
               ),
               
               
@@ -74,17 +81,16 @@ shinyUI(dashboardPage(
                               ),
                       fluidRow(
                               box(
-                              title = "Distribution of monthly wages by gender", status = "primary", solidHeader = TRUE,
+                              title = "Distribution of average wage by gender", status = "primary", solidHeader = TRUE,
                               width=5, plotOutput("wagedistribution_m_f", width="75%")
                                 ),
                               box(
-                                title = "Average wage by position", status = "primary", solidHeader = TRUE,
+                                title = "Average wage by management position and gender", status = "primary", solidHeader = TRUE,
                                 width=5, plotOutput("wage_gender_position", width="75%")
                               ),
                               box(
                                 title = "Filter", status = "primary", solidHeader = TRUE,
                                 collapsible = TRUE, width=2,
-                                "Choose the industry:",
                                 selectInput(inputId="indSelector", label="Select an industry:", choices=SelectIndustry, selected = "Education")
                                 )
                               ),
@@ -92,13 +98,13 @@ shinyUI(dashboardPage(
                       fluidRow(
                         box(
                         title = "Description", status = "primary", solidHeader = TRUE,
-                        collapsible = TRUE, width=10, "1.	The first graph shows the distribution of the wages in Switzerland 
-                        based on the selected industry. In nearly every industry male earn more in comparison to females. In 
+                        collapsible = TRUE, width=10, "The first graph shows the distribution of the wages in Switzerland 
+                        based on the selected industry. In nearly every industry males earn more in comparison to females. In 
                         some industries this effect is more pronounced. For example, in the financial industry more than 50 % 
-                        of male earn more than 10’000 CHF. For women this is not the case. A high share (around 70%) earn less 
+                        of the males earn more than 10’000 CHF. For women this is not the case. A high share (around 70%) earn less 
                         than 10’000 CHF. 
-                        2.	The second graphic show that the effect is still there even if we look at the hierarchy levels. 
-                        One can see that male earn morn in every hierarchy level in comparison to females. Again, there are 
+                        The second graphic shows that the effect is still there even if we look at the hierarchy levels. 
+                        One can see that males earn more for every hierarchy level in comparison to females. Again, there are 
                         certain industries where this effect is more accentuated."
                       )
                       )
@@ -114,30 +120,27 @@ shinyUI(dashboardPage(
                       
                       fluidRow(
                       box(
-                        title = "Wage developement with experience and age", status = "primary", solidHeader = TRUE,
+                        title = "Average wage developement with experience and age", status = "primary", solidHeader = TRUE,
                         width=8, plotOutput("wage_experience_m_f", width="75%")
                         ),
                       box(
                         title = "Filter", status = "primary", solidHeader = TRUE,
                         collapsible = TRUE, width=4,
-                        "Adjust the gender or industry",
                         selectInput(inputId="expageSelector", label="Select Experience or Age:", choices=SelectExpAge, selected = "Age"),
-                        selectInput(inputId="positionSelector", label="Select a Position:", choices=SelectPosition, selected="Bottom Squad"),
+                        selectInput(inputId="positionSelector", label="Select a Management Position:", choices=SelectPosition, selected="Bottom Squad"),
                         selectInput(inputId="educationSelector", label="Select an Education level:", choices=SelectEducation, selected="University (UNI, ETH)")
                         )
                               ),
-                      
+                      fluidRow(
                       box(
                         title = "Description", status = "primary", solidHeader = TRUE,
-                        collapsible = TRUE, width =8, "The wage increases with every year 
-                        of experience. The increase is the largest in the first
-                        couple of years and then the increase declines a little bit 
-                        by every year. With 15 years of experience there is no more 
-                        wage increase but rather a decline of the wages./n
-                        /n With over 40 years of experience there is a increase of the
-                        wages again. But this increase appears mainly due to the sammple.
-                        A lot of people drop out of the labor market. The one who stay 
-                        are the one which earned the most in the past."
+                        collapsible = TRUE, width =8, "For all the subgroups there is a strong wage 
+                        increase in the beginning of the career. The wage increases from 25 till 40 
+                        nearly every year. Nevertheless, the wage changes become smaller and smaller 
+                        and stagnate after 40. For people in higher management position this effect remains 
+                        constant longer in comparison to other groups. But even for this positions the wages 
+                        stagnate around the age of 45."
+                      )
                       )
               ),
               
@@ -148,7 +151,7 @@ shinyUI(dashboardPage(
                       fluidRow(infoBoxOutput("industry_max", width=4),
                                infoBoxOutput("industry_min", width=4)
                       ),
-                      
+                      fluidRow(
                       box(
                         title = "Wage by industry", status = "primary", solidHeader = TRUE,
                         width=8, plotOutput("wage_industry")
@@ -156,7 +159,6 @@ shinyUI(dashboardPage(
                       box(
                         title = "Filter", status = "primary", solidHeader = TRUE,
                         collapsible = TRUE, width=4,
-                        "Adjust the gender or industry",
                         selectInput(inputId="indSelector2", label="Select an industry:", choices=SelectIndustry2, 
                                     selected=c("Accommodation","Computer programming, consultancy and related activities", 
                                                "Financial service activities, except insurance and pension funding",
@@ -164,18 +166,20 @@ shinyUI(dashboardPage(
                                                "Manufacture of wood", "Manufacture of textiles", "Legal and accounting activities",
                                                "Education", "Employment activities", "Creative, arts and entertainment activities"), multiple = TRUE)
                         
+                      )
                       ),
-                      
+                      fluidRow(
                       box(
                         title = "Description", status = "primary", solidHeader = TRUE,
-                        collapsible = TRUE, width=8, "The highest paying industry in Switzerland is the financial service 
-                        with an average monthly wage of 13’300 CHF directly followed by the pharmaceutical industry with 11’254 CHF. 
+                        collapsible = TRUE, width=8, "The highest paying industry in Switzerland is the financial service sector
+                        with an average monthly wage of 11'126 CHF directly followed by the pharmaceutical industry with 10'467 CHF. 
                         The lowest paying industry is currently the “Other personal service activities” with average monthly wage 
-                        of 4’138 CHF. Note: The data is devided in 40 industries based NOGA codes. The industry classification can 
+                        of 4'573 CHF. The financial sector therefore pays 143 percent more in compariso this sector. 
+                        Note: The data is devided in 40 industries based NOGA codes. This industry classification can 
                         be found here: link"
                         
                       )
-                      
+                      )
               ),
               
               tabItem(tabName = "Location",
@@ -186,11 +190,11 @@ shinyUI(dashboardPage(
                               ),
                       fluidRow(
                       box(
-                        title = "Wage by canton", status = "primary", solidHeader = TRUE,
+                        title = "Average wage by canton", status = "primary", solidHeader = TRUE,
                         width=5, plotOutput("wage_map")
                         ),
                       box(
-                        title = "Wage by canton", status = "primary", solidHeader = TRUE,
+                        title = "Average wage by canton", status = "primary", solidHeader = TRUE,
                         width=5, plotOutput("wage_canton")
                       ),
                       box(
@@ -201,10 +205,13 @@ shinyUI(dashboardPage(
                               ),
                       fluidRow(
                         box(
-                          title = "Profile", status = "primary", solidHeader = TRUE,
-                          collapsible = TRUE, width=10, "Jan Ruffner is currently a business intelligence analyst
-                          and manager at Wuest Partner. In the past he did his PhD at the ETH Zurich.",
-                          
+                          title = "Description", status = "primary", solidHeader = TRUE,
+                          collapsible = TRUE, width=10, "
+                          The monthly average wage between the 26 cantons in Switzerland differs
+                          substantially. In Geneva, the highest paying canton, the average monthly wage is around 9’000 CHF 
+                          whereas it is in the canton of Tessin around 6’200 CHF (lowest paying canton).  This is a difference 
+                          of around 2’800 CHF which corresponds to a difference of 45 percent. Annually this makes a difference
+                          of around 33’600 CHF.",
                           )
                       )
                       ),
@@ -218,7 +225,10 @@ shinyUI(dashboardPage(
                         box(
                           title = "Profile", status = "primary", solidHeader = TRUE,
                           collapsible = TRUE, "Jan Ruffner is currently a business intelligence analyst
-                          and manager at Wuest Partner. In the past he did his PhD at the ETH Zurich.",
+                          and manager at Wuest Partner. In the past he did his PhD at the ETH Zurich in Economics and Applied Statistics. 
+                          Here you find my"
+                          , urlLinkedin <- a("Linkedin Profile", href="https://www.linkedin.com/in/jan-ruffner-phd-b1112b56/"),  
+                          ". Here you find my", urlGithub <- a("Github Profile", href="https://github.com/JanRuffian"), "."
                           
                         ),
                         img(src="JanRuffner.png")
