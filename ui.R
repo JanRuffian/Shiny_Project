@@ -1,7 +1,7 @@
 library(shiny)
 library(foreign)
 library(shinydashboard)
-
+library(DT)
 
 
 
@@ -46,7 +46,7 @@ shinyUI(dashboardPage(
                         box(
                           title = "Findings", status = "primary", solidHeader = TRUE,
                           collapsible = TRUE, width=6, 
-                          "1. Gender: Males earn on average 23.6% more than females. Annualy this is a difference of around 20'400 CHF. When we account for industry
+                          "1. Gender: Males earn on average 27.6% more than females. Annualy this is a difference of around 21'500 CHF. When we account for industry
                           or management position this difference gets smaller but a certain wage difference between gender remains.
                           2. Age: The average salary increases till the year of 40. For top management position this effect holds longer till the age of 45.   
                           3. Industry, average monthly wage: Finance: 11'126 CHF, Pharma: 10’467 CHF, Other personal service activities: 4'537 CHF

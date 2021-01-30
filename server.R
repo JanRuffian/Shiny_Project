@@ -1,19 +1,11 @@
-#
-# This is the server logic of a Shiny web application. You can run the
-# application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
-
-
 library(ggplot2 )
 library(shiny)
+library(foreign)
+library(dplyr)
+library(RSwissMaps)
+library(DT)
 
-mtcars <- mtcars
 
-# Define server logic required to draw a histogram
 shinyServer(function(input, output) {
       
       #Introduction
@@ -32,7 +24,7 @@ shinyServer(function(input, output) {
                 fill=TRUE,
                 color="green",
                 icon=icon("hand-o-up")
-        )
+                )
       })
       
       output$min_wage <- renderInfoBox({
@@ -42,18 +34,14 @@ shinyServer(function(input, output) {
                 fill=TRUE,
                 color="red",
                 icon=icon("hand-o-down")
-        )
+                )
       })
       
-
+      
       #Gender
-
       filter_wage_gender_position <- reactive ({
-        
-        filterData_wage_gender_position <- wage_industry[wage_industry$industry==input$indSelector, ]
-        
-        return(filterData_wage_gender_position)
-        
+                filterData_wage_gender_position <- wage_industry[wage_industry$industry==input$indSelector, ]
+                return(filterData_wage_gender_position)
       })
       
       output$mean_wage_female <- renderInfoBox({
@@ -63,7 +51,7 @@ shinyServer(function(input, output) {
                 value = round(mean(data[data$Sex=="Female","mean_wage"]$mean_wage),0), 
                 fill=TRUE,
                 icon=icon("female")
-        )
+                )
       })
       
       output$mean_wage_male <- renderInfoBox({
@@ -74,19 +62,15 @@ shinyServer(function(input, output) {
                 fill=TRUE,
                 color="yellow",
                 icon=icon("male")
-        )
+                )
       })
 
       filter_wage_gender_distribution <- reactive ({
-        
-        filterData_wage_gender_distribution <- wage_distribution[wage_distribution$industry==input$indSelector, ]
-        
-        return(filterData_wage_gender_distribution)
-        
+                filterData_wage_gender_distribution <- wage_distribution[wage_distribution$industry==input$indSelector, ]
+                return(filterData_wage_gender_distribution)
       })
       
       output$wagedistribution_m_f <- renderPlot({   
-        
         filter_wage_gender_distribution() %>% 
           ggplot(aes(x=mbls2, y=ratio))+geom_bar(stat="identity", aes(fill=Sex), position="dodge")+
           ylab("Density")+xlab("Monthly wages")+
@@ -94,41 +78,30 @@ shinyServer(function(input, output) {
                                                      "7000-8000","8000-9000","9000-10000","10000-11000","11000-12000",
                                                      "12000-13000","13000-14000","14000-15000","15000<"), guide = guide_axis(angle = 90))+
           theme(legend.position="bottom")
-      
       })
  
       filter_wage_gender_position <- reactive ({
-        
         filterData_wage_gender_position <- wage_gender_position[wage_gender_position$industry==input$indSelector, ]
-        
         return(filterData_wage_gender_position)
-        
-      })           
+      })          
+      
       output$wage_gender_position <- renderPlot({
-        
       ggplot(filter_wage_gender_position(), aes(x= reorder(position, mean_wage), y=mean_wage))+ 
         geom_bar(aes(fill=Sex), position='dodge', stat = "identity")+
         xlab("Management Position")+
         ylab("Monthly Wage")+
         theme(legend.position="bottom")+
         coord_flip()  
-      
       })  
  
       #Experience
-      
       filter_wage_experience <- reactive ({
-        
         filterData_wage_experience <- wage_experience_age[wage_experience_age$Cat==input$expageSelector & 
                                                             wage_experience_age$position==input$positionSelector &
-                                                            wage_experience_age$education==input$educationSelector
-                                                            , ]
+                                                            wage_experience_age$education==input$educationSelector, ]
         filterData_wage_experience %>% group_by(Cat, position) %>% summarize()
-      
         return(filterData_wage_experience)
-        
       })
-      
       
       output$experience_avg <- renderInfoBox({
         data = filter_wage_experience()
@@ -138,7 +111,7 @@ shinyServer(function(input, output) {
                 fill=TRUE,
                 color="yellow",
                 icon=icon("blind")
-        )
+                )
       })
       
       output$age_avg <- renderInfoBox({
@@ -147,7 +120,7 @@ shinyServer(function(input, output) {
                 value = round(mean(wages_1$alter),0),
                 fill=TRUE,
                 icon=icon("blind")
-        )
+                )
       })
       
       output$wage_experience_m_f <- renderPlot({   
@@ -160,21 +133,16 @@ shinyServer(function(input, output) {
       })      
        
       output$plot1 <- renderPlot({
-        ggplot(data=mtcars, aes(x=mpg, y=hp))+geom_point()
+        ggplot(data=mtcars, aes(x=mpg, y=hp))+
+        geom_point()
       })
       
       #Industry
-
       filter_wageindustry_kpis <- reactive ({
-        
         filterData_wageindustry_kpis <- wage_industry_kpis[wage_industry_kpis$industry %in% input$indSelector2, ]
-        
         return(filterData_wageindustry_kpis)
-        
       })           
 
-      
-      
       output$industry_max <- renderInfoBox({
         data=filter_wageindustry_kpis()
         infoBox(title = data[data$WagesIndustry == max(data$WagesIndustry),"industry"],
@@ -183,7 +151,7 @@ shinyServer(function(input, output) {
                 fill=TRUE,
                 color="green",
                 icon=icon("hand-o-up")
-        )
+                )
       })
       
       output$industry_min <- renderInfoBox({
@@ -194,16 +162,12 @@ shinyServer(function(input, output) {
                 fill=TRUE,
                 color="red",
                 icon=icon("hand-o-down")
-        )
+                )
       })
       
-      
       filter_wageindustry <- reactive ({
-        
         filterData_wageindustry <- wage_industry[wage_industry$industry %in% input$indSelector2, ]
-        
         return(filterData_wageindustry)
-        
       })        
       
       output$wage_industry <- renderPlot({
@@ -226,11 +190,8 @@ shinyServer(function(input, output) {
       #Canton
       
       filter_wagecanton <- reactive ({
-        
         filterData_wagecanton <- wage_canton[wage_canton$name %in% input$canSelector, ]
-        
         return(filterData_wagecanton)
-        
       })    
       
       
@@ -242,7 +203,7 @@ shinyServer(function(input, output) {
                 fill=TRUE,
                 color="green",
                 icon=icon("hand-o-up")
-        )
+                )
       })      
 
       output$canton_min <- renderInfoBox({
@@ -253,13 +214,12 @@ shinyServer(function(input, output) {
                 fill=TRUE,
                 color="red",
                 icon=icon("hand-o-down")
-        )
+                )
       })
 
       output$wage_map <- renderPlot({
       data <- filter_wagecanton()  
       can.plot(data$bfs_nr, data$values, 2016)
-        
       })
       
       output$wage_canton <- renderPlot({
@@ -269,15 +229,11 @@ shinyServer(function(input, output) {
           coord_flip()+
           xlab("Canton")+
           ylab("Monthly Wage")    
-        
       })  
       
-                
       #Data Table
       output$dt1 <- renderDT({
-        
         datatable(data=wages_data, list(pagelength=5, lengthMenu=c(10,20,30,40)))
-        
       })
       
       output$github <- renderUI({
@@ -288,5 +244,4 @@ shinyServer(function(input, output) {
         tagList("URL link:", urlLinkedin)
       })
       
-
 })

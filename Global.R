@@ -7,8 +7,6 @@ library(DT)
 
 wages <- read.dta("/Users/janruffner/Desktop/Shiny_Project/lse2010.dta")
 wages_1 <- head(wages, 2000000)
-wages_1 <- wages_1[wages_1$taetigk!=-9, ]
-
 
 #####################################################################
 #####################################################################
@@ -16,14 +14,14 @@ wages_1 <- wages_1[wages_1$taetigk!=-9, ]
 #####################################################################
 #####################################################################
 
+# Delete where dedication is NA
+wages_1 <- wages_1[wages_1$taetigk!=-9, ]
 
 # Create female and male
 wages_1 <- wages_1 %>% mutate(Sex = ifelse(geschle==1, "Male", "Female"))
 
 # Create privat/public variable
 wages_1 <- wages_1 %>% mutate(Sector = ifelse(privoef==2, "Private", "Public"))
-
-
 
 # Create variable for dedication
 taetigk <- c(10,11,12,13,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,40)
@@ -101,7 +99,6 @@ industry <- c("Forestry and logging", #2
 industry <- data.frame(nog_2_08, industry)
 wages_1 <- wages_1 %>% left_join(industry)
 
-
 # Create variable for position
 berufst <- sort(unique(wages_1$berufst))
 position <- c("Not available", #2,
@@ -113,7 +110,6 @@ position <- c("Not available", #2,
               )
 position <- data.frame(berufst, position)
 wages_1 <- wages_1 %>% left_join(position)              
-
 
 # Create variable for education
 ausbild <- sort(unique(wages_1$ausbild))
@@ -130,27 +126,6 @@ education <- c("University (UNI, ETH)", #2,
 )
 education <- data.frame(ausbild, education)
 wages_1 <- wages_1 %>% left_join(education)      
-
-ausbild <- sort(unique(wages_1$ausbild))
-education <- c("University (UNI, ETH)", #2,
-               "University of Applied Sciences (FH), PH",
-               "Higher vocational training, technical school",
-               "Teacher licence",
-               "Matura",
-               "Completed vocational training",
-               "In-house vocational training",
-               "Without completed vocational training",
-               "Other qualifications",
-               "Missing value"
-)
-
-education <- data.frame(ausbild, education)
-wages_1 <- wages_1 %>% left_join(education)   
-
-
-
-
-
 
 #####################################################################
 #####################################################################
@@ -172,7 +147,6 @@ wages_min <- round(min(wages_1$mbls),0)
 #gender/position dataset
 wage_gender_position <- wages_1 %>% group_by(Sex, position, industry) %>% summarize(mean_wage=mean(mbls), number=n()) %>% ungroup()  
 
-
 #experience dataset
 wage_experience <- wages_1 %>% group_by(dienstja, Sex, position, education) %>% summarize(mean_wage=mean(mbls), number=n())
 wage_experience$Cat <- "Experience"
@@ -182,22 +156,17 @@ wage_age$Cat <- "Age"
 wage_age <- wage_age %>% rename(Year="alter")
 wage_experience_age <- rbind(wage_experience,wage_age)
 
-
 #industry dataset
-
 wage_industry<- wages_1 %>% group_by(industry, Sex) %>% summarise(WagesIndustry=mean(mbls), weight=n())
 
 #industry dataset for kpis
-
 wage_industry_kpis <- wages_1 %>% group_by(industry) %>% summarise(WagesIndustry=mean(mbls), weight=n())
 
 # canton dataset
-
 dt <- can.template(2016)
 wages_1 <- wages_1 %>% mutate(name=arbkto)
 wages_1 <- wages_1 %>% left_join(dt)
 wage_canton <- wages_1 %>% group_by(name, bfs_nr) %>% summarize(values=round(mean(mbls),0))
-
 
 # data dataset
 wages_data <- wages_1 %>% rename(corporateID = "burnr_n", gender="Sex", 
@@ -206,10 +175,7 @@ wages_data <- wages_1 %>% rename(corporateID = "burnr_n", gender="Sex",
                               select(canton, corporateID, industry, gender, experience, age, position, education,
                               dedication, wage)
 
-colnames(wages_data)
-
 # Create distribution dataset
-
 wages_1 <- wages_1 %>% mutate(mbls2 = ifelse(mbls<1000, 1, ifelse(mbls>1000 & mbls<=2000, 2, ifelse(mbls>2000 & mbls<=3000, 3, 
           ifelse(mbls>3000 & mbls<=4000, 4, ifelse(mbls>4000 & mbls<=5000, 5, ifelse(mbls>5000 & mbls<=6000, 6, ifelse(mbls>6000 & mbls<=7000, 7, 
           ifelse(mbls>7000 & mbls<=8000, 8, ifelse(mbls>8000 & mbls<=9000, 9,ifelse(mbls>9000 & mbls<=10000, 10,
@@ -218,10 +184,8 @@ wages_1 <- wages_1 %>% mutate(mbls2 = ifelse(mbls<1000, 1, ifelse(mbls>1000 & mb
 
 wage_distribution <- wages_1 %>% group_by(industry, Sex, mbls2) %>% summarise(sum_people = n())
 wage_distribution <- wage_distribution %>% group_by(industry, Sex) %>% summarize(sum_people_group=sum(sum_people)) %>% 
-  left_join(wage_distribution) 
+                      left_join(wage_distribution) 
 wage_distribution$ratio = wage_distribution$sum_people/wage_distribution$sum_people_group
-
-
 
 #####################################################################
 #####################################################################
