@@ -175,7 +175,7 @@ shinyServer(function(input, output) {
       geom_bar(aes(fill=Sex), position='dodge', stat = "identity")+
       coord_flip()+
       xlab("Industry")+
-      ylab("Montly Wage")    
+      ylab("Monthly Wage")    
       })  
       
       output$wage_dedication <- renderPlot({
