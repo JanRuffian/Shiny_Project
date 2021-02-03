@@ -38,6 +38,7 @@ shinyServer(function(input, output) {
       })
       
       
+      
       #Gender
       filter_wage_gender_position <- reactive ({
                 filterData_wage_gender_position <- wage_industry[wage_industry$industry==input$indSelector, ]
@@ -46,8 +47,8 @@ shinyServer(function(input, output) {
       
       output$mean_wage_female <- renderInfoBox({
         data=filter_wage_gender_position()
-        infoBox(title = "Average Monthly Wage (by selected industry)",
-                subtitle = "CHF",
+        infoBox(title = unique(data$industry),
+                subtitle = "Average Monthly Wage (CHF)",
                 value = round(mean(data[data$Sex=="Female","mean_wage"]$mean_wage),0), 
                 fill=TRUE,
                 icon=icon("female")
@@ -56,14 +57,15 @@ shinyServer(function(input, output) {
       
       output$mean_wage_male <- renderInfoBox({
         data=filter_wage_gender_position()
-        infoBox(title = "Average Monthly Wage (by selected industry)",
-                subtitle = "CHF",
+        infoBox(title = unique(data$industry),
+                subtitle = "Average Monthly Wage (CHF)",
                 value = round(mean(data[data$Sex=="Male","mean_wage"]$mean_wage),0),
                 fill=TRUE,
                 color="yellow",
                 icon=icon("male")
                 )
       })
+
 
       filter_wage_gender_distribution <- reactive ({
                 filterData_wage_gender_distribution <- wage_distribution[wage_distribution$industry==input$indSelector, ]

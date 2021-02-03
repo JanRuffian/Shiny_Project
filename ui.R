@@ -3,13 +3,13 @@ library(foreign)
 library(shinydashboard)
 library(DT)
 
-  
+
 
 # Define UI for application that draws a histogram
 shinyUI(dashboardPage( 
-    dashboardHeader(title = "Wage Determinants"), 
+    dashboardHeader(title = "Wage Determinants in Switzerland", titleWidth = 350), 
     dashboardSidebar(
-      sidebarUserPanel("Jan Ruffner"),
+      sidebarUserPanel("Menu"),
       sidebarMenu(
         menuItem(text="Introduction", tabName = "Introduction", icon = icon("map")),
         menuItem(text="Gender", tabName = "Gender", icon = icon("venus-mars")),
@@ -32,13 +32,20 @@ shinyUI(dashboardPage(
                       fluidRow(
                         box(
                         title = "Aim", status = "primary", solidHeader = TRUE,
-                        collapsible = TRUE, width=6, "The application presents the wages in Switzerland
+                        collapsible = TRUE, width=6, HTML("The application presents the wages in Switzerland
                         in the year 2018. Furthermore, the app gives insights about the main
                         determinants of the wages and wage distribution. Important factors
-                        are gender, experience, industry, management position and location.
+                        are:<br/>
+                        - Gender <br/>
+                        - Experience <br/>
+                        - Education <br/>
+                        - Management position<br/>
+                        - Industry <br/>
+                        - Location <br/>
+                        - Dedication <br/>
                         On the one hand it will help companies to set the right wages to be competitive. 
                         On the other hand it will inform the state if there is discrimination for example 
-                        between gender and nationality. "
+                        between gender and nationality.")
                         ),img(src="Lohnbuch2018.png", height="40%", width="40%")      
                       ),
                         
@@ -46,12 +53,12 @@ shinyUI(dashboardPage(
                         box(
                           title = "Findings", status = "primary", solidHeader = TRUE,
                           collapsible = TRUE, width=6, 
-                          "1. Gender: Males earn on average 27.6% more than females. Annualy this is a difference of around 21'500 CHF. When we account for industry
-                          or management position this difference gets smaller but a certain wage difference between gender remains.
-                          2. Age: The average salary increases till the year of 40. For top management position this effect holds longer till the age of 45.   
-                          3. Industry, average monthly wage: Finance: 11'126 CHF, Pharma: 10’467 CHF, Other personal service activities: 4'537 CHF
+                          HTML("1. Gender: Males earn on average 27.6% more than females. Annualy this is a difference of around 21'500 CHF. When we account for industry
+                          or management position this difference gets smaller but a certain wage difference between gender remains. <br/>
+                          2. Age: The average salary increases till the year of 40. For top management position this effect holds longer till the age of 45.<br/>   
+                          3. Industry, average monthly wage: Finance: 11'126 CHF, Pharma: 10’467 CHF, Other personal service activities: 4'537 CHF <br/>
                           4. Location: The highest paying canton Geneva pays 26% more in comparison to the lowest paying canton Tessin, which corresponds to 
-                          an annual difference of around 33'600 CHF"
+                          an annual difference of around 33'600 CHF")
                           )   
                               ),
                       
@@ -98,14 +105,14 @@ shinyUI(dashboardPage(
                       fluidRow(
                         box(
                         title = "Description", status = "primary", solidHeader = TRUE,
-                        collapsible = TRUE, width=10, "The first graph shows the distribution of the wages in Switzerland 
+                        collapsible = TRUE, width=10, HTML("The first graph shows the distribution of the wages in Switzerland 
                         based on the selected industry. In nearly every industry males earn more in comparison to females. In 
                         some industries this effect is more pronounced. For example, in the financial industry more than 50 % 
                         of the males earn more than 10’000 CHF. For women this is not the case. A high share (around 70%) earn less 
-                        than 10’000 CHF. 
+                        than 10’000 CHF. <br/>
                         The second graphic shows that the effect is still there even if we look at the hierarchy levels. 
                         One can see that males earn more for every hierarchy level in comparison to females. Again, there are 
-                        certain industries where this effect is more accentuated."
+                        certain industries where this effect is more accentuated.")
                       )
                       )
                       ),
@@ -176,8 +183,8 @@ shinyUI(dashboardPage(
                         The lowest paying industry is currently the “Other personal service activities” with average monthly wage 
                         of 4'573 CHF. The financial sector therefore pays 143 percent more in compariso this sector. 
                         Note: The data is devided in 40 industries based NOGA codes. This industry classification can 
-                        be found here: link"
-                        
+                        be found here: ", 
+                         urlNogaCodes <- a("Noga Codes", href="https://www.bfs.admin.ch/bfs/en/home/statistics/industry-services/nomenclatures/noga/publications-noga-2008.html")
                       )
                       )
               ),
@@ -228,7 +235,7 @@ shinyUI(dashboardPage(
                           and manager at Wuest Partner. In the past he did his PhD at the ETH Zurich in Economics and Applied Statistics. 
                           Here you find my"
                           , urlLinkedin <- a("Linkedin Profile", href="https://www.linkedin.com/in/jan-ruffner-phd-b1112b56/"),  
-                          ". Here you find my", urlGithub <- a("Github Profile", href="https://github.com/JanRuffian"), "."
+                          "and my", urlGithub <- a("Github Profile", href="https://github.com/JanRuffian"), "."
                           
                         ),
                         img(src="JanRuffner.png")
